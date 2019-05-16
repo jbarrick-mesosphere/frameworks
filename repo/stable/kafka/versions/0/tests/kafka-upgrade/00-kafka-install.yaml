@@ -1,0 +1,27 @@
+apiVersion: kudo.k8s.io/v1alpha1
+kind: Instance
+metadata:
+  name: zookeeper
+spec:
+  frameworkVersion:
+    name: zk
+    namespace: default
+    type: FrameworkVersion
+---
+apiVersion: kudo.k8s.io/v1alpha1
+kind: Instance
+metadata:
+  name: kafka
+spec:
+  frameworkVersion:
+    name: kafka-2.11-2.4.0
+    namespace: default
+    type: FrameworkVersion
+  dependency:
+    - referenceName: zookeeper
+      name: zk
+      type: Instance
+  parameters:
+    KAFKA_ZOOKEEPER_URI: zk-zk-0.zk-hs:2181,zk-zk-1.zk-hs:2181,zk-zk-2.zk-hs:2181
+    KAFKA_ZOOKEEPER_PATH: "/kafka"
+    BROKER_COUNT: "1"
